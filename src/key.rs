@@ -17,7 +17,7 @@
 
 use std::intrinsics::copy_nonoverlapping;
 use arrayvec::ArrayVec;
-use rand::Rng;
+#[cfg(feature = "rand")] use rand::Rng;
 
 use super::{Secp256k1, ContextFlag};
 use super::Error::{self, IncapableContext, InvalidPublicKey, InvalidSecretKey};
@@ -65,6 +65,7 @@ pub const MINUS_ONE_KEY: SecretKey = SecretKey([0xff, 0xff, 0xff, 0xff, 0xff, 0x
 #[derive(Copy, Clone, PartialEq, Eq, Debug, Hash)]
 pub struct PublicKey(ffi::PublicKey);
 
+#[cfg(feature = "rand")]
 fn random_32_bytes<R: Rng>(rng: &mut R) -> [u8; 32] {
     let mut ret = [0u8; 32];
     rng.fill_bytes(&mut ret);
@@ -74,6 +75,7 @@ fn random_32_bytes<R: Rng>(rng: &mut R) -> [u8; 32] {
 impl SecretKey {
     /// Creates a new random secret key
     #[inline]
+    #[cfg(feature = "rand")]
     pub fn new<R: Rng>(secp: &Secp256k1, rng: &mut R) -> SecretKey {
         let mut data = random_32_bytes(rng);
         unsafe {
