@@ -114,7 +114,7 @@ static void secp256k1_ecmult_gen_context_clone(secp256k1_ecmult_gen_context *dst
 
 static void secp256k1_ecmult_gen_context_clear(secp256k1_ecmult_gen_context *ctx) {
 #ifndef USE_ECMULT_STATIC_PRECOMPUTATION
-    free(ctx->prec);
+    secp256k1_dealloc(ctx->prec, sizeof(*ctx->prec));
 #endif
     secp256k1_scalar_clear(&ctx->blind);
     secp256k1_gej_clear(&ctx->initial);

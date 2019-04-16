@@ -63,6 +63,8 @@ pub mod ecdh;
 pub mod ffi;
 pub mod key;
 pub mod schnorr;
+#[doc(hidden)]
+pub mod alloc;
 
 /// A tag used for recovering the public key from a compact signature
 #[derive(Copy, Clone, PartialEq, Eq, Debug)]

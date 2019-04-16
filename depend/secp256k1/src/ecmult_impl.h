@@ -109,9 +109,9 @@ static void secp256k1_ecmult_odd_multiples_table_storage_var(int n, secp256k1_ge
         secp256k1_ge_to_storage(&pre[i], &prea[i]);
     }
 
-    free(prea);
-    free(prej);
-    free(zr);
+    secp256k1_dealloc(prea, sizeof(secp256k1_ge) * n);
+    secp256k1_dealloc(prej, sizeof(secp256k1_gej) * n);
+    secp256k1_dealloc(zr, sizeof(secp256k1_fe) * n);
 }
 
 /** The following two macro retrieves a particular odd multiple from a table
@@ -203,9 +203,9 @@ static int secp256k1_ecmult_context_is_built(const secp256k1_ecmult_context *ctx
 }
 
 static void secp256k1_ecmult_context_clear(secp256k1_ecmult_context *ctx) {
-    free(ctx->pre_g);
+    secp256k1_dealloc(ctx->pre_g, sizeof((*ctx->pre_g)[0]) * ECMULT_TABLE_SIZE(WINDOW_G));
 #ifdef USE_ENDOMORPHISM
-    free(ctx->pre_g_128);
+    secp256k1_dealloc(ctx->pre_g_128, sizeof((*ctx->pre_g_128)[0]) * ECMULT_TABLE_SIZE(WINDOW_G));
 #endif
     secp256k1_ecmult_context_init(ctx);
 }
@@ -263,7 +263,7 @@ static int secp256k1_ecmult_wnaf(int *wnaf, int len, const secp256k1_scalar *a, 
     CHECK(carry == 0);
     while (bit < 256) {
         CHECK(secp256k1_scalar_get_bits(&s, bit++, 1) == 0);
-    } 
+    }
 #endif
     return last_set_bit + 1;
 }

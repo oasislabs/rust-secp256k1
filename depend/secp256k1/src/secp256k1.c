@@ -61,7 +61,7 @@ secp256k1_context* secp256k1_context_create(unsigned int flags) {
     if (EXPECT((flags & SECP256K1_FLAGS_TYPE_MASK) != SECP256K1_FLAGS_TYPE_CONTEXT, 0)) {
             secp256k1_callback_call(&ret->illegal_callback,
                                     "Invalid flags");
-            free(ret);
+            secp256k1_dealloc(ret, sizeof(secp256k1_context));
             return NULL;
     }
 
@@ -92,7 +92,7 @@ void secp256k1_context_destroy(secp256k1_context* ctx) {
         secp256k1_ecmult_context_clear(&ctx->ecmult_ctx);
         secp256k1_ecmult_gen_context_clear(&ctx->ecmult_gen_ctx);
 
-        free(ctx);
+        secp256k1_dealloc(ctx, sizeof(secp256k1_context));
     }
 }
 

@@ -15,6 +15,9 @@
 #include <stdint.h>
 #include <stdio.h>
 
+extern void *secp256k1_alloc(size_t);
+extern void secp256k1_dealloc(void*, size_t);
+
 typedef struct {
     void (*fn)(const char *text, void* data);
     const void* data;
@@ -66,7 +69,7 @@ static SECP256K1_INLINE void secp256k1_callback_call(const secp256k1_callback * 
 #endif
 
 static SECP256K1_INLINE void *checked_malloc(const secp256k1_callback* cb, size_t size) {
-    void *ret = malloc(size);
+    void *ret = secp256k1_alloc(size);
     if (ret == NULL) {
         secp256k1_callback_call(cb, "Out of memory");
     }
